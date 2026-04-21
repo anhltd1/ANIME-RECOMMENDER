@@ -36,7 +36,7 @@ spec:
       containers:
         - name: anime-recommender
           image: anime-recommender:latest
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 8501
@@ -62,7 +62,7 @@ spec:
   selector:
     app: anime-recommender
   ports:
-    - name: http
-      port: 8501
+    - name: TCP
+      port: 80
       targetPort: 8501
       protocol: TCP
