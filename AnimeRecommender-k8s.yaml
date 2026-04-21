@@ -62,7 +62,7 @@ spec:
   selector:
     app: anime-recommender
   ports:
-    - name: TCP
+    - name: http
       port: 80
       targetPort: 8501
       protocol: TCP
