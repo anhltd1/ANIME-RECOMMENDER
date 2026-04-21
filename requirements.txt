@@ -1,0 +1,12 @@
+# Pinned for reproducible installs; see requirements.md for roles.
+# langchain-openai 0.2.x requires langchain-core>=0.3.27; langchain 0.2.x pins core<0.3 — use 0.1.23 with 0.2.16.
+langchain==0.2.16
+langchain-community==0.2.16
+langchain-openai==0.1.23
+openai>=1.40.0,<2
+# Vector index: FAISS on disk + OpenAI embeddings API (no HuggingFace/torch for embeddings).
+# Removed: chromadb, sentence-transformers, langchain_huggingface — onnx/torch DLL issues.
+faiss-cpu==1.8.0.post1
+streamlit==1.37.1
+pandas==2.2.2
+python-dotenv==1.0.1

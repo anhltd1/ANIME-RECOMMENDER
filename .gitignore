@@ -1,0 +1,41 @@
+# Secrets and environment files (never commit real keys — use .env.example only as a template)
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.env
+.envrc
+.flaskenv
+
+# Direnv / local overrides
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# GCP / generic credential dumps (often JSON keys)
+*credentials*.json
+*-firebase-adminsdk*.json
+service-account*.json
+**/service-account*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Runtime logs (optional: remove if you want to track logs in git)
+logs/*.md
+logs/*.log
+!logs/.gitkeep

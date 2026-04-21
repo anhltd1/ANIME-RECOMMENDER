@@ -1,0 +1,68 @@
+# AnimeRecommender — Deployment + Service (single manifest for GKE / kubectl apply -f)
+#
+# Kubernetes resource names must be lowercase (DNS-1123). Labels record the product name "AnimeRecommender".
+#
+# Build & load local image (example — adjust registry for GCR / Artifact Registry):
+#   docker build -t anime-recommender:latest .
+#   # minikube / kind: load image into cluster, keep imagePullPolicy: Never
+#   # GKE: tag & push to Artifact Registry, set image: REGION-docker.pkg.dev/PROJECT/REPO/anime-recommender:TAG
+#   #       and imagePullPolicy: IfNotPresent
+#
+# Secrets (required before apply — app needs OpenAI keys):
+#   kubectl create secret generic anime-recommender-secrets \
+#     --from-literal=OPENAI_API_KEY=sk-... \
+#     --from-literal=OPENAI_MODEL=gpt-4o-mini \
+#     --from-literal=OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+#
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anime-recommender
+  labels:
+    app.kubernetes.io/name: AnimeRecommender
+    app: anime-recommender
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anime-recommender
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: AnimeRecommender
+        app: anime-recommender
+    spec:
+      containers:
+        - name: anime-recommender
+          image: anime-recommender:latest
+          imagePullPolicy: Never
+          ports:
+            - name: http
+              containerPort: 8501
+              protocol: TCP
+          env:
+            - name: STREAMLIT_SERVER_ADDRESS
+              value: "0.0.0.0"
+            - name: STREAMLIT_SERVER_HEADLESS
+              value: "true"
+          envFrom:
+            - secretRef:
+                name: anime-recommender-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anime-recommender
+  labels:
+    app.kubernetes.io/name: AnimeRecommender
+    app: anime-recommender
+spec:
+  type: LoadBalancer
+  selector:
+    app: anime-recommender
+  ports:
+    - name: http
+      port: 8501
+      targetPort: 8501
+      protocol: TCP
